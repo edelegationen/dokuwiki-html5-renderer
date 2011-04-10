@@ -1,0 +1,24 @@
+
+This is a DokuWiki renderer with various fixes to increase compatibility with
+HTML5. It inherits from the default DokuWiki XHTML renderer and only makes
+minor changes.
+
+- Title attributes with links or bad data removed.
+- Id attributes added directly to headings instead of empty anchor elements.
+- No name attributes.
+
+
+
+Installation
+------------
+
+1. Place the dwhtml5 folder in the DokuWiki lib/plugins folder.
+
+2. Select the dwhtml5 renderer in your DokuWiki configuration settings.
+
+
+
+License
+-------
+
+Sme as DokuWiki (GPLv2). See License file.
