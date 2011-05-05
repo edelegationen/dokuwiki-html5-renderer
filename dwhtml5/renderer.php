@@ -325,6 +325,56 @@ class renderer_plugin_dwhtml5 extends Doku_Renderer_xhtml {
 
 
 
+
+    /**
+     * Use GeSHi to highlight language syntax in code and file blocks
+     *
+     * @author Andreas Gohr <andi@splitbrain.org>
+     */
+    function _highlight($type, $text, $language=null, $filename=null) {
+        global $conf;
+        global $ID;
+        global $lang;
+
+        if($filename){
+            // add icon
+            list($ext) = mimetype($filename,false);
+            $class = preg_replace('/[^_\-a-z0-9]+/i','_',$ext);
+            $class = 'mediafile mf_'.$class;
+
+            $this->doc .= '<dl class="'.$type.'">'.DOKU_LF;
+            $this->doc .= '<dt><a href="'.exportlink($ID,'code',array('codeblock'=>$this->_codeblock)).'" title="'.$lang['download'].'" class="'.$class.'">';
+            $this->doc .= hsc($filename);
+            $this->doc .= '</a></dt>'.DOKU_LF.'<dd>';
+        }
+
+        if ($text{0} == "\n") {
+            $text = substr($text, 1);
+        }
+        if (substr($text, -1) == "\n") {
+            $text = substr($text, 0, -1);
+        }
+
+        if ( is_null($language) ) {
+            $this->doc .= '<pre class="'.$type.'">'.$this->_xmlEntities($text).'</pre>'.DOKU_LF;
+        } else {
+            $class = 'code'; //we always need the code class to make the syntax highlighting apply
+            if($type != 'code') $class .= ' '.$type;
+
+            $this->doc .= "<code class=\"$class $language\">".p_xhtml_cached_geshi($text, $language, '').'</code>'.DOKU_LF;
+        }
+
+        if($filename){
+            $this->doc .= '</dd></dl>'.DOKU_LF;
+        }
+
+        $this->_codeblock++;
+    }
+
+
+
+
+
     function acronym($acronym) {
 
         if ( array_key_exists($acronym, $this->acronyms) ) {
